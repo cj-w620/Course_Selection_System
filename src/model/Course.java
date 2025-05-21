@@ -100,4 +100,8 @@ public class Course implements Serializable {
     public boolean dropStudent(String studentId) {
         return enrolledStudents.remove(studentId);
     }
+
+    public boolean isFull() {
+        return enrolledStudents.size() >= capacity;
+    }
 }

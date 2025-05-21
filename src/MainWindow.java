@@ -329,9 +329,9 @@ class TeacherFrame extends JFrame {
         JSpinner endTimeSpinner = new JSpinner(new SpinnerDateModel());
         JButton createCourseBtn = new JButton("创建课程");
         
-        // 设置时间选择器格式
-        JSpinner.DateEditor beginEditor = new JSpinner.DateEditor(beginTimeSpinner, "HH:mm");
-        JSpinner.DateEditor endEditor = new JSpinner.DateEditor(endTimeSpinner, "HH:mm");
+        // 设置时间选择器格式为MM-dd HH:mm
+        JSpinner.DateEditor beginEditor = new JSpinner.DateEditor(beginTimeSpinner, "MM-dd HH:mm");
+        JSpinner.DateEditor endEditor = new JSpinner.DateEditor(endTimeSpinner, "MM-dd HH:mm");
         beginTimeSpinner.setEditor(beginEditor);
         endTimeSpinner.setEditor(endEditor);
         
@@ -347,9 +347,31 @@ class TeacherFrame extends JFrame {
         createCoursePanel.add(createCourseBtn);
         
         createCourseBtn.addActionListener(e -> {
+            String name = courseNameField.getText().trim();
+            String capacityText = capacityField.getText().trim();
+            
+            if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "课程名称不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (capacityText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "课程容量不能为空！", "错误", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             try {
-                String name = courseNameField.getText();
-                int capacity = Integer.parseInt(capacityField.getText());
+                // 确保输入只包含数字
+                if (!capacityText.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(this, "课程容量必须为正整数！", "错误", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                int capacity = Integer.parseInt(capacityText);
+                if (capacity <= 0) {
+                    JOptionPane.showMessageDialog(this, "课程容量必须大于0！", "错误", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
                 Date beginTime = (Date) beginTimeSpinner.getValue();
                 Date endTime = (Date) endTimeSpinner.getValue();
                 
@@ -362,7 +384,7 @@ class TeacherFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, "课程创建成功！");
                 refreshCourses();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "请输入有效的数字！", "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "课程容量必须是有效数字！", "错误", JOptionPane.ERROR_MESSAGE);
             }
         });
         

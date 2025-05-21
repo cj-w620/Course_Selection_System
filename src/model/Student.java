@@ -8,11 +8,11 @@ import java.util.List;
 
 public class Student extends User {
     private static final long serialVersionUID = 1L;
-    
+    private List<String> enrolledCourses;
     
     public Student(String userId, String username, String password) {
         super(userId, username, password, "student");
-        
+        this.enrolledCourses = new ArrayList<>();
     }
     
     @Override
@@ -42,36 +42,63 @@ public class Student extends User {
      * @param courseId  预选课程id
      */
     public boolean enrollCourse(String courseId) {
-        return CourseManager.enrollStudent(this.userId, courseId);
-    }
-    
-    public boolean dropCourse(String courseId) {
-        return CourseManager.dropStudent(this.userId, courseId);
-    }
-
-    //学生查看课程
-    public void viewMyCourses() {
-        //读取所有课程信息，课程信息中enrolledStudents存放了选择了这门课的学生id，如果包含当前学生id，证明选了这门课。
-        List<Course> allCourses = CourseManager.getAllCourses();
-        List<String> enrolledCourses = new ArrayList<>();
-        for (Course course : allCourses) {
-            if (course.getEnrolledStudents().contains(this.userId)) {
-                enrolledCourses.add(course.getCourseId());
+        Course course = CourseManager.getCourse(courseId);
+        if (course == null) {
+            System.err.println("课程不存在: " + courseId);
+            return false;
+        }
+        if (course.isFull()) {
+            System.err.println("课程已满: " + courseId);
+            return false;
+        }
+        
+        // 检查时间冲突
+        for (String enrolledId : enrolledCourses) {
+            Course enrolledCourse = CourseManager.getCourse(enrolledId);
+            if (enrolledCourse != null && isTimeConflict(course, enrolledCourse)) {
+                System.err.println("时间冲突: " + courseId + " 与 " + enrolledId);
+                return false;
             }
         }
-        //打印课程信息
-        if(enrolledCourses.isEmpty()){
+        
+        enrolledCourses.add(courseId);
+        if (course.enrollStudent(userId, course.getBeginTime(), course.getEndTime())) {
+            System.out.println("成功选课: " + courseId);
+            return true;
+        } else {
+            enrolledCourses.remove(courseId);
+            System.out.println("选课失败: " + courseId);
+            return false;
+        }
+    }
+
+    public boolean dropCourse(String courseId) {
+        if (enrolledCourses.remove(courseId)) {
+            Course course = CourseManager.getCourse(courseId);
+            if (course != null) {
+                course.dropStudent(userId);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public void viewMyCourses() {
+        if (enrolledCourses.isEmpty()) {
             System.out.println("暂未选课！");
             return;
         }
         System.out.println("\n=== 我的课程 ===");
         enrolledCourses.forEach(courseId -> {
-            Course course = manager.CourseManager.getCourse(courseId);
+            Course course = CourseManager.getCourse(courseId);
             if (course != null) {
                 System.out.println(course.getCourseId() + ": " + course.getCourseName());
             }
         });
     }
 
-    
+    private boolean isTimeConflict(Course newCourse, Course existingCourse) {
+        return newCourse.getBeginTime().before(existingCourse.getEndTime()) &&
+               newCourse.getEndTime().after(existingCourse.getBeginTime());
+    }
 }
