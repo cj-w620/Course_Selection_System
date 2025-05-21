@@ -102,6 +102,7 @@ public class Main {
                 teacher.viewMyCourses();
                 break;
             case 3: // 查看课程学生
+                teacher.viewMyCourses();
                 String courseId = ConsoleUtils.readString("输入课程ID: ");
                 Course course = CourseManager.getCourse(courseId);
                 if (course != null && course.getTeacherId().equals(teacher.getUserId())) {

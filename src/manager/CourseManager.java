@@ -27,6 +27,7 @@ public class CourseManager {
         return new ArrayList<>(courses);
     }
     
+    //返回指定教师的课程信息
     public static List<Course> getCoursesByTeacher(String teacherId) {
         List<Course> result = new ArrayList<>();
         for (Course course : courses) {
@@ -39,6 +40,7 @@ public class CourseManager {
     
     public static boolean enrollStudent(String studentId, String courseId) {
         Course course = getCourse(courseId);
+        //有这个课程 并且 该学生可以选这门课（容量、时间、是否选过）
         if (course != null && course.enrollStudent(studentId)) {
             FilePersistence.saveData(COURSE_FILE, courses);
             return true;
