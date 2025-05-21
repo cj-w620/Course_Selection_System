@@ -41,15 +41,14 @@ public class Student extends User {
      * 选课
      * @param courseId  预选课程id
      */
-    public void enrollCourse(String courseId) {
-        boolean flag = CourseManager.enrollStudent(this.userId, courseId);
-        if(!flag){
-            System.out.println("选课失败，请检查课程余量是否充足 或 是否已选过该门课程 或 选课时间冲突");
-        }else{
-            System.out.println("选课成功");
-        }
+    public boolean enrollCourse(String courseId) {
+        return CourseManager.enrollStudent(this.userId, courseId);
     }
     
+    public boolean dropCourse(String courseId) {
+        return CourseManager.dropStudent(this.userId, courseId);
+    }
+
     //学生查看课程
     public void viewMyCourses() {
         //读取所有课程信息，课程信息中enrolledStudents存放了选择了这门课的学生id，如果包含当前学生id，证明选了这门课。

@@ -11,7 +11,12 @@ public class CourseManager {
     //添加课程
     public static void addCourse(Course course) {
         courses.add(course);
-        FilePersistence.saveData(COURSE_FILE, courses);
+        saveCourses();
+    }
+    
+    public static void deleteCourse(String courseId) {
+        courses.removeIf(c -> c.getCourseId().equals(courseId));
+        saveCourses();
     }
     
     //查找课程
@@ -76,5 +81,9 @@ public class CourseManager {
             }
         }
         return enrolled;
+    }
+    
+    private static void saveCourses() {
+        FilePersistence.saveData(COURSE_FILE, courses);
     }
 }

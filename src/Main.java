@@ -101,7 +101,9 @@ public class Main {
                 String beginTimeStr = ConsoleUtils.readString("课程开始时间: (MM-dd HH)");
                 String endTimeStr = ConsoleUtils.readString("课程结束时间: (MM-dd HH)");
                 try {
-                    teacher.createCourse(courseName, capacity, beginTimeStr,endTimeStr);
+                    Date beginTime = TimeUtils.strToDate(beginTimeStr);
+                    Date endTime = TimeUtils.strToDate(endTimeStr);
+                    teacher.createCourse(courseName, capacity, beginTime, endTime);
                 } catch (ParseException e) {
                     System.err.println("时间格式错误，创建课程失败");
                 }

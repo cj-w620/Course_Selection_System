@@ -13,6 +13,11 @@ public class UserManager {
         FilePersistence.saveData(USER_FILE, users);
     }
     
+    public static void deleteUser(String userId) {
+        users.removeIf(u -> u.getUserId().equals(userId));
+        FilePersistence.saveData(USER_FILE, users);
+    }
+    
     public static User getUser(String userId) {
         return users.stream()
             .filter(u -> u.getUserId().equals(userId))

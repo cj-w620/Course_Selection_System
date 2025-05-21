@@ -22,13 +22,13 @@ public class Teacher extends User {
         System.out.println("4. 退出登录");
     }
     
-    public void createCourse(String courseName, int capacity, String beginTimeStr, String endTimeStr) throws ParseException {
+    public void createCourse(String courseName, int capacity, Date beginTime, Date endTime) {
         Course newCourse = new Course(
             util.IDGenerator.generate("CRS"),
             courseName,
             capacity,
-            TimeUtils.strToDate(beginTimeStr), 
-            TimeUtils.strToDate(endTimeStr),
+            beginTime,
+            endTime,
             this.userId
         );
         manager.CourseManager.addCourse(newCourse);
