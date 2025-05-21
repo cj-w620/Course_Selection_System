@@ -3,6 +3,7 @@ package model;
 import manager.CourseManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Student extends User {
@@ -25,14 +26,28 @@ public class Student extends User {
     
     public void viewAvailableCourses() {
         System.out.println("\n=== 可选课程 ===");
-        manager.CourseManager.getAllCourses().forEach(course -> {
+        List<Course> courses = CourseManager.getAllCourses();
+        if(courses.isEmpty()){
+            System.out.println("暂无可选课程!");
+            return;
+        }
+        courses.forEach(course -> {
             System.out.println(course.getCourseId() + ": " + course.getCourseName() + 
                 " (" + course.getEnrolledCount() + "/" + course.getCapacity() + ")");
         });
     }
-    
+
+    /**
+     * 选课
+     * @param courseId  预选课程id
+     */
     public void enrollCourse(String courseId) {
-        manager.CourseManager.enrollStudent(this.userId, courseId);
+        boolean flag = CourseManager.enrollStudent(this.userId, courseId);
+        if(!flag){
+            System.out.println("选课失败，请检查课程余量是否充足 或 是否已选过该门课程 或 选课时间冲突");
+        }else{
+            System.out.println("选课成功");
+        }
     }
     
     //学生查看课程
@@ -46,6 +61,10 @@ public class Student extends User {
             }
         }
         //打印课程信息
+        if(enrolledCourses.isEmpty()){
+            System.out.println("暂未选课！");
+            return;
+        }
         System.out.println("\n=== 我的课程 ===");
         enrolledCourses.forEach(courseId -> {
             Course course = manager.CourseManager.getCourse(courseId);
@@ -54,5 +73,6 @@ public class Student extends User {
             }
         });
     }
+
     
 }

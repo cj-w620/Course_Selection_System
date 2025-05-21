@@ -41,7 +41,7 @@ public class CourseManager {
     public static boolean enrollStudent(String studentId, String courseId) {
         Course course = getCourse(courseId);
         //有这个课程 并且 该学生可以选这门课（容量、时间、是否选过）
-        if (course != null && course.enrollStudent(studentId)) {
+        if (course != null && course.enrollStudent(studentId,course.getBeginTime(),course.getEndTime())) {
             FilePersistence.saveData(COURSE_FILE, courses);
             return true;
         }

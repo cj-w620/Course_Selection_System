@@ -2,6 +2,9 @@ import model.*;
 import manager.*;
 import util.*;
 
+import java.text.ParseException;
+import java.util.Date;
+
 public class Main {
     public static void main(String[] args) {
         initializeSystem();
@@ -95,18 +98,29 @@ public class Main {
             case 1: // 创建课程
                 String courseName = ConsoleUtils.readString("课程名称: ");
                 int capacity = ConsoleUtils.readInt("课程容量: ");
-                String schedule = ConsoleUtils.readString("上课时间: ");
-                teacher.createCourse(courseName, capacity, schedule);
+                String beginTimeStr = ConsoleUtils.readString("课程开始时间: (MM-dd HH)");
+                String endTimeStr = ConsoleUtils.readString("课程结束时间: (MM-dd HH)");
+                try {
+                    teacher.createCourse(courseName, capacity, beginTimeStr,endTimeStr);
+                } catch (ParseException e) {
+                    System.err.println("时间格式错误，创建课程失败");
+                }
                 break;
             case 2: // 查看我的课程
                 teacher.viewMyCourses();
                 break;
             case 3: // 查看课程学生
-                teacher.viewMyCourses();
+                if(!teacher.viewMyCourses()){
+                    break;
+                }
                 String courseId = ConsoleUtils.readString("输入课程ID: ");
                 Course course = CourseManager.getCourse(courseId);
                 if (course != null && course.getTeacherId().equals(teacher.getUserId())) {
                     System.out.println("\n=== 选课学生 ===");
+                    if(course.getEnrolledStudents().isEmpty()){
+                        System.out.println("暂无学生选该门课");
+                        break;
+                    }
                     course.getEnrolledStudents().forEach(studentId -> {
                         User student = UserManager.getUser(studentId);
                         if (student != null) {

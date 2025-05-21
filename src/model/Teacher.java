@@ -1,5 +1,12 @@
 package model;
 
+import manager.CourseManager;
+import util.TimeUtils;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+
 public class Teacher extends User {
     private static final long serialVersionUID = 1L;
     public Teacher(String userId, String username, String password) {
@@ -15,23 +22,32 @@ public class Teacher extends User {
         System.out.println("4. 退出登录");
     }
     
-    public void createCourse(String courseName, int capacity, String schedule) {
+    public void createCourse(String courseName, int capacity, String beginTimeStr, String endTimeStr) throws ParseException {
         Course newCourse = new Course(
             util.IDGenerator.generate("CRS"),
             courseName,
             capacity,
-            schedule,
+            TimeUtils.strToDate(beginTimeStr), 
+            TimeUtils.strToDate(endTimeStr),
             this.userId
         );
         manager.CourseManager.addCourse(newCourse);
         System.out.println("课程创建成功: " + newCourse.getCourseId());
     }
     
-    public void viewMyCourses() {
+    //返回值表示是否有课程
+    public boolean viewMyCourses() {
         System.out.println("\n=== 我的授课课程 ===");
-        manager.CourseManager.getCoursesByTeacher(this.userId).forEach(course -> {
+        List<Course> courses = CourseManager.getCoursesByTeacher(this.userId);
+        if(courses.isEmpty()){
+            System.out.println("暂无课程！");
+            return false;
+        }
+        courses.forEach(course -> {
             System.out.println(course.getCourseId() + ": " + course.getCourseName() + 
-                " (" + course.getEnrolledCount() + "/" + course.getCapacity() + ")");
+                " (" + course.getEnrolledCount() + "/" + course.getCapacity() + ")"
+            + "课程时间："+TimeUtils.dateToStr(course.getBeginTime()) + " - " + TimeUtils.dateToStr(course.getEndTime()));
         });
+        return true;
     }
 }
