@@ -15,6 +15,7 @@
 ### utils
   * ConsoleUtils 输入工具类
   * IDGenerator 唯一ID生成器
+  * TimeUtils 时间比较工具类
      
 ## 待解决问题
 ~~1.课程时间是String类型，应该改成Date，学生选课时要校验课程时间冲突。  （现在代码中只校验了容量和课程中是否已包含该学生）~~
