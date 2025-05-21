@@ -21,6 +21,7 @@ public abstract class User implements Serializable {
     public String getUserId() { return userId; }
     public String getUsername() { return username; }
     public String getRole() { return role; }
+    public String getPassword() { return password; }
     
     //密码校验
     public boolean authenticate(String password) {

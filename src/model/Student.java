@@ -31,27 +31,31 @@ public class Student extends User {
         });
     }
     
-    public void enrollCourse(String courseId) {
-        manager.CourseManager.enrollStudent(this.userId, courseId);
+    public boolean enrollCourse(String courseId) {
+        return manager.CourseManager.enrollStudent(this.userId, courseId);
+    }
+
+    public boolean dropCourse(String courseId) {
+        return manager.CourseManager.dropStudent(this.userId, courseId);
     }
     
-    //学生查看课程
-    public void viewMyCourses() {
-        //读取所有课程信息，课程信息中enrolledStudents存放了选择了这门课的学生id，如果包含当前学生id，证明选了这门课。
+    public List<Course> getEnrolledCourses() {
         List<Course> allCourses = CourseManager.getAllCourses();
-        List<String> enrolledCourses = new ArrayList<>();
+        List<Course> enrolledCourses = new ArrayList<>();
         for (Course course : allCourses) {
             if (course.getEnrolledStudents().contains(this.userId)) {
-                enrolledCourses.add(course.getCourseId());
+                enrolledCourses.add(course);
             }
         }
-        //打印课程信息
+        return enrolledCourses;
+    }
+
+    //学生查看课程
+    public void viewMyCourses() {
+        List<Course> enrolledCourses = getEnrolledCourses();
         System.out.println("\n=== 我的课程 ===");
-        enrolledCourses.forEach(courseId -> {
-            Course course = manager.CourseManager.getCourse(courseId);
-            if (course != null) {
-                System.out.println(course.getCourseId() + ": " + course.getCourseName());
-            }
+        enrolledCourses.forEach(course -> {
+            System.out.println(course.getCourseId() + ": " + course.getCourseName());
         });
     }
     

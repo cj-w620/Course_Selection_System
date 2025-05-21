@@ -47,4 +47,34 @@ public class CourseManager {
         }
         return false;
     }
+
+    public static boolean dropStudent(String studentId, String courseId) {
+        Course course = getCourse(courseId);
+        if (course != null && course.dropStudent(studentId)) {
+            FilePersistence.saveData(COURSE_FILE, courses);
+            return true;
+        }
+        return false;
+    }
+
+    public static List<Course> getAvailableCourses(String studentId) {
+        List<Course> available = new ArrayList<>();
+        for (Course course : courses) {
+            if (!course.getEnrolledStudents().contains(studentId) 
+                && course.getEnrolledCount() < course.getCapacity()) {
+                available.add(course);
+            }
+        }
+        return available;
+    }
+
+    public static List<Course> getEnrolledCourses(String studentId) {
+        List<Course> enrolled = new ArrayList<>();
+        for (Course course : courses) {
+            if (course.getEnrolledStudents().contains(studentId)) {
+                enrolled.add(course);
+            }
+        }
+        return enrolled;
+    }
 }

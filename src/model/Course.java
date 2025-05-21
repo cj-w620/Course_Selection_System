@@ -41,4 +41,8 @@ public class Course implements Serializable {
     public List<String> getEnrolledStudents() {
         return new ArrayList<>(enrolledStudents);
     }
+
+    public boolean dropStudent(String studentId) {
+        return enrolledStudents.remove(studentId);
+    }
 }
