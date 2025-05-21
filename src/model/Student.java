@@ -3,6 +3,7 @@ package model;
 import manager.CourseManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Student extends User {
@@ -25,38 +26,53 @@ public class Student extends User {
     
     public void viewAvailableCourses() {
         System.out.println("\n=== 可选课程 ===");
-        manager.CourseManager.getAllCourses().forEach(course -> {
+        List<Course> courses = CourseManager.getAllCourses();
+        if(courses.isEmpty()){
+            System.out.println("暂无可选课程!");
+            return;
+        }
+        courses.forEach(course -> {
             System.out.println(course.getCourseId() + ": " + course.getCourseName() + 
                 " (" + course.getEnrolledCount() + "/" + course.getCapacity() + ")");
         });
     }
-    
-    public boolean enrollCourse(String courseId) {
-        return manager.CourseManager.enrollStudent(this.userId, courseId);
-    }
 
-    public boolean dropCourse(String courseId) {
-        return manager.CourseManager.dropStudent(this.userId, courseId);
-    }
-    
-    public List<Course> getEnrolledCourses() {
-        List<Course> allCourses = CourseManager.getAllCourses();
-        List<Course> enrolledCourses = new ArrayList<>();
-        for (Course course : allCourses) {
-            if (course.getEnrolledStudents().contains(this.userId)) {
-                enrolledCourses.add(course);
-            }
+    /**
+     * 选课
+     * @param courseId  预选课程id
+     */
+    public void enrollCourse(String courseId) {
+        boolean flag = CourseManager.enrollStudent(this.userId, courseId);
+        if(!flag){
+            System.out.println("选课失败，请检查课程余量是否充足 或 是否已选过该门课程 或 选课时间冲突");
+        }else{
+            System.out.println("选课成功");
         }
-        return enrolledCourses;
     }
-
+    
     //学生查看课程
     public void viewMyCourses() {
-        List<Course> enrolledCourses = getEnrolledCourses();
+        //读取所有课程信息，课程信息中enrolledStudents存放了选择了这门课的学生id，如果包含当前学生id，证明选了这门课。
+        List<Course> allCourses = CourseManager.getAllCourses();
+        List<String> enrolledCourses = new ArrayList<>();
+        for (Course course : allCourses) {
+            if (course.getEnrolledStudents().contains(this.userId)) {
+                enrolledCourses.add(course.getCourseId());
+            }
+        }
+        //打印课程信息
+        if(enrolledCourses.isEmpty()){
+            System.out.println("暂未选课！");
+            return;
+        }
         System.out.println("\n=== 我的课程 ===");
-        enrolledCourses.forEach(course -> {
-            System.out.println(course.getCourseId() + ": " + course.getCourseName());
+        enrolledCourses.forEach(courseId -> {
+            Course course = manager.CourseManager.getCourse(courseId);
+            if (course != null) {
+                System.out.println(course.getCourseId() + ": " + course.getCourseName());
+            }
         });
     }
+
     
 }

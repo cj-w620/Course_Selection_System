@@ -1,6 +1,9 @@
 package util;
 import java.util.UUID;
 
+/**
+ * 唯一ID生成器
+ */
 public class IDGenerator {
     
     public static String generate(String prefix) {
