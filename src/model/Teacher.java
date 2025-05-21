@@ -1,6 +1,7 @@
 package model;
 
 public class Teacher extends User {
+    private static final long serialVersionUID = 1L;
     public Teacher(String userId, String username, String password) {
         super(userId, username, password, "teacher");
     }
