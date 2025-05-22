@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 public class MainWindow {
     /**
      * 程序入口
+     * author: 信管 1243 202411671333
      */
     public static void main(String[] args) {
         initializeSystem();
