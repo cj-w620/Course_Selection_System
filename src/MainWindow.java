@@ -296,8 +296,8 @@ class AdminFrame extends JFrame {
                 teacher != null ? teacher.getUsername() : "未知",
                 course.getCapacity(),
                 course.getEnrolledStudents().size(),
-                course.getBeginTime(),
-                course.getEndTime()
+                TimeUtils.dateToStr(course.getBeginTime()),
+                    TimeUtils.dateToStr(course.getEndTime())
             };
             model.addRow(row);
         }
@@ -427,8 +427,8 @@ class TeacherFrame extends JFrame {
                 course.getCourseName(),
                 course.getCapacity(),
                 course.getEnrolledStudents().size(),
-                course.getBeginTime(),
-                course.getEndTime()
+                TimeUtils.dateToStr(course.getBeginTime()),
+                TimeUtils.dateToStr(course.getEndTime())
             };
             model.addRow(row);
         }
@@ -537,8 +537,8 @@ class StudentFrame extends JFrame {
                 teacher != null ? teacher.getUsername() : "未知",
                 course.getCapacity(),
                 course.getEnrolledStudents().size(),
-                course.getBeginTime(),
-                course.getEndTime()
+                TimeUtils.dateToStr(course.getBeginTime()),
+                TimeUtils.dateToStr(course.getEndTime())
             };
             availableModel.addRow(row);
         }
@@ -555,8 +555,8 @@ class StudentFrame extends JFrame {
                 course.getCourseId(),
                 course.getCourseName(),
                 teacher != null ? teacher.getUsername() : "未知",
-                course.getBeginTime(),
-                course.getEndTime()
+                TimeUtils.dateToStr(course.getBeginTime()),
+                TimeUtils.dateToStr(course.getEndTime())
             };
             enrolledModel.addRow(row);
         }
